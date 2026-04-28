@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  web:
+    image: ghcr.io/kotulskim/swarm-demo:latest
+    ports:
+      - "88:5005"
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: any
