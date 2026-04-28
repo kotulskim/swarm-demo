@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build Push Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  docker:
+  deploy:
     runs-on: ubuntu-latest
 
     permissions:
@@ -25,9 +25,23 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build image
-        run: |
-          docker build -t ghcr.io/kotulskim/swarm-demo:latest .
+        run: docker build -t ghcr.io/kotulskim/swarm-demo:latest .
 
       - name: Push image
+        run: docker push ghcr.io/kotulskim/swarm-demo:latest
+
+      - name: Install SSH key
         run: |
-          docker push ghcr.io/kotulskim/swarm-demo:latest
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy on Swarm
+        run: |
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }} "
+          docker service update \
+          --image ghcr.io/kotulskim/swarm-demo:latest \
+          --with-registry-auth \
+          demo_web
+          "
