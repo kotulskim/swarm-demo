@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return f"Hello from Docker Swarm! Host: {socket.gethostname()}"
+    return f"Hello from Docker Swarm v2! Host: {socket.gethostname()}"
 
 @app.route("/health")
 def health():
