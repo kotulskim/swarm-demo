@@ -9,3 +9,12 @@ services:
       replicas: 3
       restart_policy:
         condition: any
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
