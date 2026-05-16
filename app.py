@@ -1,4 +1,8 @@
+from flask import Flask
+import socket
 import os
+
+app = Flask(__name__)   # 👈 NAJPIERW
 
 def read_secret(path):
     try:
@@ -20,3 +24,9 @@ def home():
     <p><b>Secret:</b> {secret}</p>
     <p><b>Host:</b> {socket.gethostname()}</p>
     """
+
+@app.route("/health")
+def health():
+    return "OK", 200
+
+app.run(host="0.0.0.0", port=5005)
