@@ -2,12 +2,14 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/kotulskim/swarm-demo:latest
+    image: ghcr.io/kotulskim/swarm-demo:1778940291
     ports:
       - "88:5005"
     environment:
       APP_ENV: PROD
-      APP_VERSION: "1.0"
+      APP_VERSION: "1.1"
+    secrets:
+      - app_secret
     deploy:
       replicas: 3
       restart_policy:
@@ -21,3 +23,7 @@ services:
         parallelism: 1
         delay: 5s
         order: start-first
+
+secrets:
+  app_secret:
+    external: true
