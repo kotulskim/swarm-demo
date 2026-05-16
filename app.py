@@ -10,7 +10,7 @@ def get_db_connection():
         host="postgres",
         database="appdb",
         user="appuser",
-        password=os.getenv("DB_PASSWORD2", "example")
+        password=os.getenv("DB_PASSWORD", "example")
     )
 
 @app.route("/")

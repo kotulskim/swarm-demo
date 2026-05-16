@@ -6,9 +6,9 @@ services:
     ports:
       - "88:5005"
     environment:
-      DB_PASSWORD_FILE: /run/secrets/db_password2
+      DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
-      - db_password2
+      - db_password
     deploy:
       replicas: 2
 
@@ -17,9 +17,9 @@ services:
     environment:
       POSTGRES_DB: appdb
       POSTGRES_USER: appuser
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password2
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
     secrets:
-      - db_password2
+      - db_password
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -27,5 +27,5 @@ volumes:
   pgdata:
 
 secrets:
-  db_password2:
+  db_password:
     external: true
