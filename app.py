@@ -1,29 +1,48 @@
 from flask import Flask
 import socket
 import os
+import psycopg2
 
-app = Flask(__name__)   # 👈 NAJPIERW
+app = Flask(__name__)
 
-def read_secret(path):
-    try:
-        with open(path, "r") as f:
-            return f.read().strip()
-    except:
-        return "NO_SECRET"
+def get_db_connection():
+    return psycopg2.connect(
+        host="postgres",
+        database="appdb",
+        user="appuser",
+        password=os.getenv("DB_PASSWORD2", "example")
+    )
 
 @app.route("/")
 def home():
-    app_env = os.getenv("APP_ENV", "DEV")
-    app_version = os.getenv("APP_VERSION", "unknown")
-    secret = read_secret("/run/secrets/app_secret")
+    return f"Hello from {socket.gethostname()}"
 
-    return f"""
-    <h1>Hello from Docker Swarm!</h1>
-    <p><b>Environment:</b> {app_env}</p>
-    <p><b>Version:</b> {app_version}</p>
-    <p><b>Secret:</b> {secret}</p>
-    <p><b>Host:</b> {socket.gethostname()}</p>
-    """
+@app.route("/init")
+def init_db():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("CREATE TABLE IF NOT EXISTS visits (count INT);")
+    cur.execute("INSERT INTO visits (count) VALUES (1);")
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return "DB initialized"
+
+@app.route("/count")
+def count():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM visits;")
+    result = cur.fetchone()[0]
+
+    cur.close()
+    conn.close()
+
+    return f"Rows in DB: {result}"
 
 @app.route("/health")
 def health():

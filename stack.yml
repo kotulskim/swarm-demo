@@ -2,28 +2,30 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/kotulskim/swarm-demo:1778940291
+    image: ghcr.io/kotulskim/swarm-demo:latest
     ports:
       - "88:5005"
     environment:
-      APP_ENV: PROD
-      APP_VERSION: "1.1"
+      DB_PASSWORD_FILE: /run/secrets/db_password2
     secrets:
-      - app_secret
+      - db_password2
     deploy:
-      replicas: 3
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 1
-        delay: 10s
-        order: start-first
-        failure_action: rollback
-      rollback_config:
-        parallelism: 1
-        delay: 5s
-        order: start-first
+      replicas: 2
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password2
+    secrets:
+      - db_password2
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
 
 secrets:
-  app_secret:
+  db_password2:
     external: true
