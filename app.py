@@ -5,12 +5,21 @@ import psycopg2
 
 app = Flask(__name__)
 
+def read_secret(path):
+    try:
+        with open(path, "r") as f:
+            return f.read().strip()
+    except:
+        return None
+
 def get_db_connection():
+    password = read_secret("/run/secrets/db_password")
+
     return psycopg2.connect(
         host="postgres",
         database="appdb",
         user="appuser",
-        password=os.getenv("DB_PASSWORD", "example")
+        password=password
     )
 
 @app.route("/")
