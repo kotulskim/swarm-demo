@@ -5,6 +5,9 @@ services:
     image: ghcr.io/kotulskim/swarm-demo:latest
     ports:
       - "88:5005"
+    environment:
+      APP_ENV: PROD
+      APP_VERSION: "1.0"
     deploy:
       replicas: 3
       restart_policy:
