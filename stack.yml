@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/kotulskim/swarm-demo:1778963578
+    image: ghcr.io/kotulskim/swarm-demo:1779042900
     environment:
       DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
@@ -14,7 +14,7 @@ services:
       replicas: 2
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.swarmdemo.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.swarmdemo.rule=Host(`app.local`)"
         - "traefik.http.routers.swarmdemo.entrypoints=web"
         - "traefik.http.routers.swarmdemo.service=swarmdemo-svc"
         - "traefik.http.services.swarmdemo-svc.loadbalancer.server.port=5005"
