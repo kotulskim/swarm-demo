@@ -2,16 +2,34 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/kotulskim/swarm-demo:1778962886
-    ports:
-      - "88:5005"
+    image: ghcr.io/kotulskim/swarm-demo:1778963578
     environment:
       DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
       - db_password
+    networks:
+      - traefik-public
+      - backend
     deploy:
       replicas: 2
-
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.swarmdemo.rule=PathPrefix(`/`)"
+        - "traefik.http.routers.swarmdemo.entrypoints=web"
+        - "traefik.http.routers.swarmdemo.service=swarmdemo-svc"
+        - "traefik.http.services.swarmdemo-svc.loadbalancer.server.port=5005"
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
+      restart_policy:
+        condition: any
+  
   postgres:
     image: postgres:15
     environment:
@@ -22,6 +40,8 @@ services:
       - db_password
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
 
 volumes:
   pgdata:
@@ -29,3 +49,8 @@ volumes:
 secrets:
   db_password:
     external: true
+
+networks:
+  traefik-public:
+    external: true
+  backend:
