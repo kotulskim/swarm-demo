@@ -24,7 +24,7 @@ def get_db_connection():
 
 @app.route("/")
 def home():
-    return f"Hello from {socket.gethostname()} v4"
+    return f"Hello from {socket.gethostname()} v5"
 
 @app.route("/init")
 def init_db():
