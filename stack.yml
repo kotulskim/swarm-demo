@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: ghcr.io/kotulskim/swarm-demo:1779043693
+    image: ghcr.io/kotulskim/swarm-demo:latest
     environment:
       DB_PASSWORD_FILE: /run/secrets/db_password
     secrets:
