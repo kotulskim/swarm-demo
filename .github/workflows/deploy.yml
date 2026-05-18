@@ -25,13 +25,17 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set tag
-        run: echo "TAG=$(date +%s)" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
 
       - name: Build image
-        run: docker build -t ghcr.io/kotulskim/swarm-demo:${{ env.TAG }} .
+        run: |
+          docker build -t ghcr.io/kotulskim/swarm-demo:${{ env.TAG }} .
+          docker tag ghcr.io/kotulskim/swarm-demo:${{ env.TAG }} ghcr.io/kotulskim/swarm-demo:latest
 
       - name: Push image
-        run: docker push ghcr.io/kotulskim/swarm-demo:${{ env.TAG }}
+        run: |
+          docker push ghcr.io/kotulskim/swarm-demo:${{ env.TAG }}
+          docker push ghcr.io/kotulskim/swarm-demo:latest
 
       - name: Install SSH key
         run: |
