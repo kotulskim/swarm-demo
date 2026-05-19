@@ -15,6 +15,8 @@ services:
       placement:
         constraints:
           - node.labels.role == app
+        preferences:
+          - spread: node.id
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.swarmdemo.rule=Host(`app.local`)"
