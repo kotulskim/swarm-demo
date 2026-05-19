@@ -12,6 +12,9 @@ services:
       - backend
     deploy:
       replicas: 2
+      placement:
+        constraints:
+          - node.labels.role == app
       labels:
         - "traefik.enable=true"
         - "traefik.http.routers.swarmdemo.rule=Host(`app.local`)"
