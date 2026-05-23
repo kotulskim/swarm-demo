@@ -8,18 +8,18 @@ redis_client = redis.Redis(
     decode_responses=True
 )
 
-print("Worker started. Waiting for jobs...")
+print("Worker started. Waiting for jobs...", flush=True)
 
 while True:
     job = redis_client.blpop("jobs", timeout=5)
 
     if job:
         queue_name, payload = job
-        print(f"Received job: {payload}")
+        print(f"Received job: {payload}", flush=True)
 
         time.sleep(5)
 
         redis_client.incr("jobs_done")
-        print(f"Finished job: {payload}")
+        print(f"Finished job: {payload}", flush=True)
     else:
-        print("No jobs...")
+        print("No jobs...", flush=True)
