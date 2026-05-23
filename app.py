@@ -32,7 +32,7 @@ redis_client = redis.Redis(
 
 @app.route("/")
 def home():
-    return f"Hello from {socket.gethostname()} v7 redis"
+    return f"Hello from {socket.gethostname()} v8 k8s"
 
 @app.route("/redis-count")
 def redis_count():
