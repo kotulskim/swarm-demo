@@ -34,6 +34,7 @@ services:
         order: start-first
       restart_policy:
         condition: any
+
   
   postgres:
     image: postgres:15
