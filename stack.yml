@@ -74,6 +74,8 @@ services:
   worker:
     image: ghcr.io/kotulskim/swarm-demo:${APP_TAG}
     command: ["python", "worker.py"]
+    healthcheck:
+      disable: true
     networks:
       - backend
     deploy:
