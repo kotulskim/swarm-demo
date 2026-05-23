@@ -71,6 +71,17 @@ services:
         constraints:
           - node.labels.infra == true
 
+  worker:
+    image: ghcr.io/kotulskim/swarm-demo:${APP_TAG}
+    command: ["python", "worker.py"]
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app == true
+
 volumes:
   pgdata:
   redis_data:

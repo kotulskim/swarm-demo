@@ -71,4 +71,20 @@ def count():
 def health():
     return "OK", 200
 
+@app.route("/job")
+def create_job():
+    job_id = redis_client.incr("job_id")
+    payload = f"job-{job_id}"
+
+    redis_client.rpush("jobs", payload)
+
+    return f"Job created: {payload}\n"
+
+
+@app.route("/jobs-done")
+def jobs_done():
+    count = redis_client.get("jobs_done") or 0
+    return f"Jobs done: {count}\n"
+
+
 app.run(host="0.0.0.0", port=5005)
