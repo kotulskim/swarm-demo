@@ -2,7 +2,7 @@ from flask import Flask
 import socket
 import os
 import psycopg2
-
+import redis
 app = Flask(__name__)
 
 def read_secret(path):
@@ -22,9 +22,23 @@ def get_db_connection():
         password=password
     )
 
+
+
+redis_client = redis.Redis(
+    host='redis',
+    port=6379,
+    decode_responses=True
+)
+
 @app.route("/")
 def home():
-    return f"Hello from {socket.gethostname()} v6"
+    return f"Hello from {socket.gethostname()} v7 redis"
+
+@app.route("/redis-count")
+def redis_count():
+    count = redis_client.incr("counter")
+    return f"Redis counter: {count}\n"
+
 
 @app.route("/init")
 def init_db():
