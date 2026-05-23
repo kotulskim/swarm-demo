@@ -48,8 +48,31 @@ services:
     networks:
       - backend
 
+
+  redis:
+    image: redis:7-alpine
+  
+    command:
+      - redis-server
+      - --appendonly
+      - yes
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - backend
+
+    deploy:
+      replicas: 1
+
+      placement:
+        constraints:
+          - node.labels.role == infra
+
 volumes:
   pgdata:
+  redis_data:
 
 secrets:
   db_password:
