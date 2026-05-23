@@ -55,7 +55,7 @@ services:
     command:
       - redis-server
       - --appendonly
-      - yes
+      - "yes"
 
     volumes:
       - redis_data:/data
