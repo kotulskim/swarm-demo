@@ -14,7 +14,7 @@ services:
       replicas: 2
       placement:
         constraints:
-          - node.labels.role == app
+          - node.labels.app == true
         preferences:
           - spread: node.id
       labels:
@@ -69,7 +69,7 @@ services:
 
       placement:
         constraints:
-          - node.labels.role == infra
+          - node.labels.infra == true
 
 volumes:
   pgdata:
