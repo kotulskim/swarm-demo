@@ -30,6 +30,15 @@ redis_client = redis.Redis(
     decode_responses=True
 )
 
+from flask import request
+
+@app.before_request
+def log_request():
+    with open("/shared-logs/access.log", "a") as f:
+        f.write(
+            f"{request.method} {request.path} handled by {socket.gethostname()}\n"
+        )
+
 @app.route("/")
 def home():
     return f"Hello from {socket.gethostname()} v9"
